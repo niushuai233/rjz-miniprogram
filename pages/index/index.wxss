@@ -1,0 +1,32 @@
+/**index.wxss**/
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+
+.usermotto {
+  margin-top: 100px;
+  text-align: center;
+}
+
+.yysentence {
+  text-indent: 65rpx;
+  font-family: 'Courier New', Courier, monospace;
+  font-style: italic;
+  background-color: #fffbea;
+  margin-top: 100px;
+  width: 220px;
+  text-align: left;
+}
