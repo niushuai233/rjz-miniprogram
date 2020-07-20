@@ -12,7 +12,7 @@
       <button type="primary" plain="true" bindtap="toMain">Start</button>
     </view>
     <view class="yysentence">
-      <text class="yy-sentence">{{yySentence}}</text>
+      <text class="yy-sentence" bindtap="loadYiYan">{{yySentence}}</text>
     </view>
   </view>
 </view>
