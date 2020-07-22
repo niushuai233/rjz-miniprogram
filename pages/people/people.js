@@ -51,6 +51,9 @@ Page({
       })
     }
   },
+  onShow() {
+    this.loadYiYan();
+  },
   loadYiYan() {
     var _this = this;
     wx.request({
