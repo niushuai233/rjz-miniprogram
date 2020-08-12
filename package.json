@@ -8,16 +8,7 @@
   "scripts": {
     "dev:wx": "node build/dev-server.js wx",
     "start:wx": "npm run dev:wx",
-    "build:wx": "node build/build.js wx",
-    "dev:tt": "node build/dev-server.js tt",
-    "start:tt": "npm run dev:tt",
-    "build:tt": "node build/build.js tt",
-    "dev:my": "node build/dev-server.js my",
-    "start:my": "npm run dev:my",
-    "build:my": "node build/build.js my",
-    "dev": "node build/dev-server.js wx",
-    "start": "npm run dev",
-    "build": "node build/build.js wx"
+    "build:wx": "node build/build.js wx"
   },
   "dependencies": {
     "echarts": "^4.2.1",
