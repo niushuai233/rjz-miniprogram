@@ -83,56 +83,14 @@
             <div class="delete" @click="delAccounting(cItem._id)">删除</div>
           </div>
         </div>
-        <!-- <div class="item-block">
-            <div class="item-head">
-              <div class="item-date">2019</div>
-              <div class="item-info">支出：xxxx</div>
-            </div>
-            <div class="item-list">
-              <div class="detail-info">
-                <div class="detail-icon">
-                  <i class="iconfont icon-jiahao" style="line-height: 80rpx; text-align: center; font-size: 50rpx"></i>
-                </div>
-                <div class="detail-title">交通</div>
-              </div>
-              <div class="detail-price">99</div>
-            </div>
-        </div>-->
-        <!-- <div class="item-block">
-            <div class="item-head">
-              <div class="item-date">2019</div>
-              <div class="item-info">支出：xxxx</div>
-            </div>
-            <div class="item-list">
-              <div class="detail-info">
-                <div class="detail-icon">
-                  <i class="iconfont icon-jiahao" style="line-height: 80rpx; text-align: center; font-size: 50rpx"></i>
-                </div>
-                <div class="detail-title">交通</div>
-              </div>
-              <div class="detail-price">99</div>
-            </div>
-        </div>-->
       </div>
     </scroll-view>
-
-    <!-- <picker
-        mode="date"
-        :value="date"
-        fields="month"
-        @change="bindDateChange"
-      >
-
-        <view class="picker">
-          当前选择：{{date}}
-        </view>
-    </picker>-->
-
     <tab-bar :selectNavIndex="0"></tab-bar>
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
 import utils from '@/utils'
 import timePicker from '@/components/timePicker'
 import tabBar from '@/components/tabBar'
@@ -270,6 +228,21 @@ export default {
       this.listTouchInfo.lastX = 0
     },
     init() {
+      var userInfo = wx.getStorageSync('user_info');
+      // 存在token
+      console.log('user_info:', userInfo);
+      // 检查有效期
+      debugger
+      if (userInfo && userInfo.user) {
+        if (userInfo.user.userToken.expireTimeMills > new Date().getMilliseconds()) {
+          console.log('token 有效');
+          this.getBookingList()
+          this.getAllAmount()
+          return;
+        }
+      }
+      console.log('token 失效重新登陆');
+      var thi = this;
       wx.login({
         success (res) {
           if (res.code) {
@@ -282,7 +255,10 @@ export default {
                 code: res.code
               },
               success: res => {
-                console.log('请求后台成功! ' + JSON.stringify(res));
+                console.log('请求后台成功! ', res);
+                wx.setStorageSync("user_info", res.data);
+                thi.getBookingList()
+                thi.getAllAmount()
               }
             })
           } else {
@@ -290,8 +266,6 @@ export default {
           }
         }
       })
-      this.getBookingList()
-      this.getAllAmount()
     }
   },
 
@@ -315,7 +289,7 @@ export default {
 
   },
   onShow () {
-      this.init();
+    this.init();
   },
   mounted(){
     // this.getBookingList({
