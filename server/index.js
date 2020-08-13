@@ -58,7 +58,7 @@ function connect() {
     .on('error', console.log)
     .on('disconnected', connect)
     .once('open', () => {
-      app.listen(9091, () => console.log('[Server] starting at port 9091'))
+      app.listen(5000, () => console.log('[Server] starting at port 5000'))
     });
   return mongoose.connect('mongodb://localhost:27017/bookkeepingDemo', {
     useNewUrlParser: true
