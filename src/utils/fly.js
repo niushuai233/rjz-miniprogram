@@ -36,36 +36,6 @@ fly.interceptors.request.use((request)=>{
 			.catch(err => {
 				store.commit('AUTH_ERROR')
 			})
-			
-		// return new Promise((resolve, reject) => {
-		// 	store.commit('AUTH_REQUEST')
-        // wx.login({
-        //     success: function (res) {
-        //         if (res.code) {
-        //             //发起网络请求
-        //             wx.request({
-        //                 url: `${process.env.API_ROOT}/user/login`,
-        //                 data: {
-        //                     code: res.code
-        //                 },
-        //                 success:res=>{
-        //                     // console.log(res.data)
-		// 					store.commit('AUTH_SUCCESS', res.data.Token)
-		// 					request.headers["Authorization"]=`Bearer ${res.data.Token}`
-		// 					fly.unlock();
-		// 					resolve(request)
-							
-        //                 }
-        //             })
-        //         } else {
-		// 			fly.unlock();
-		// 			reject(res)
-		// 			store.commit('AUTH_ERROR')
-        //             console.log('登录失败！' + res.errMsg)
-        //         }
-        //     }
-        // });
-    	// })
 		} else {
 			//给所有请求添加自定义header
 			request.headers["Authorization"]=`Bearer ${token}`

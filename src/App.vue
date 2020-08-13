@@ -17,31 +17,9 @@ export default {
   },
   created () {
     // 调用API从本地缓存中获取数据
-
-    // let logs
-    // if (mpvuePlatform === 'my') {
-    //   logs = mpvue.getStorageSync({key: 'logs'}).data || []
-    //   logs.unshift(Date.now())
-    //   mpvue.setStorageSync({
-    //     key: 'logs',
-    //     data: logs
-    //   })
-    // } else {
-    //   logs = mpvue.getStorageSync('logs') || []
-    //   logs.unshift(Date.now())
-    //   mpvue.setStorageSync('logs', logs)
-    // }
-  
     // 请求系统信息
     store.dispatch('getSystemInfo')
-    
-    
   },
-  // log () {
-  //   console.log(`log at:${Date.now()}`)
-  // }
-
- 
 }
 </script>
 
