@@ -28,35 +28,40 @@ app.use(errorCatch);
 app.use(bodyParser())
 
 //全局路由除了path 以外都需要携带token去请求
-app.use(jwtKoa({secret:secret}).unless({
-  path: [/\/user\/login/] 
+app.use(jwtKoa({
+  secret: secret
+}).unless({
+  path: [/\/user\/login/]
 }))
 
 app.use(userCheck)
 // 引入路由分发
 let userRoutes = require('./routes')
 let addAccountingRoutes = require('./routes/accounting.js')
-router.use('/user',userRoutes.routes())
-router.use('/accounting',addAccountingRoutes.routes())
+router.use('/user', userRoutes.routes())
+router.use('/accounting', addAccountingRoutes.routes())
 
 app.use(router.routes())
 app.use(router.allowedMethods())
 
 
-app.on('error', function(err){
-	console.log('errorEmiter',err);
+app.on('error', function (err) {
+  console.log('errorEmiter', err);
 })
 
 
 // 连接 mongoDB
 connect()
+
 function connect() {
-    mongoose.connection
-      .on('error', console.log)
-      .on('disconnected', connect)
-      .once('open', ()=> {
-        app.listen(5000, () => console.log('[Server] starting at port 5000'))
-      });
-    return mongoose.connect('mongodb://localhost:27017/bookkeepingDemo', { useNewUrlParser: true });
-    // return mongoose.connect('mongodb://test:test@localhost:27017/bookkeepingDemo', { useNewUrlParser: true });
-  }
+  mongoose.connection
+    .on('error', console.log)
+    .on('disconnected', connect)
+    .once('open', () => {
+      app.listen(9091, () => console.log('[Server] starting at port 9091'))
+    });
+  return mongoose.connect('mongodb://localhost:27017/bookkeepingDemo', {
+    useNewUrlParser: true
+  });
+  // return mongoose.connect('mongodb://test:test@localhost:27017/bookkeepingDemo', { useNewUrlParser: true });
+}
