@@ -12,6 +12,9 @@ if(process.env.NODE_ENV == 'local'){
 module.exports = async (ctx, next) => {
     let resultData = ''
     function getAppId(appid, secret, js_code) {
+        console.log('appid:', appid);
+        console.log('appsecret:', secret);
+        console.log('js_code:', js_code);
         return new Promise((resolve, reject) => {
         request.get(
             {
@@ -29,9 +32,9 @@ module.exports = async (ctx, next) => {
                 if (body.errcode) {
                     return reject(body.errmsg)
                 }
-                // console.log("小程序端返回的结果")
-                // console.log("[openid]", body.openid)
-                // console.log("[session_key]", body.session_key)
+                console.log("小程序端返回的结果")
+                console.log("[openid]", body.openid)
+                console.log("[session_key]", body.session_key)
                 resolve(body);
             } else {
                 reject(error);
@@ -193,9 +196,4 @@ module.exports = async (ctx, next) => {
         }
 
         next()
-    
-    // User.userCheck(resultData.openid).then(async user => {
-    //     console.log(user)
-        
-    // })
 }

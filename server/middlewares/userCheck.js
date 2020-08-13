@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const User = mongoose.model("User");
 module.exports = async (ctx, next) => {
-    console.log(ctx.state.user)
+    console.log('userCheck', ctx.state.user)
     if (!ctx.state.user || (ctx.state.user && !ctx.state.user.openid)) {
         await next()
     } else {
