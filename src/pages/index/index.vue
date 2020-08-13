@@ -232,7 +232,6 @@ export default {
       // 存在token
       console.log('user_info:', userInfo);
       // 检查有效期
-      debugger
       if (userInfo && userInfo.user) {
         if (userInfo.user.userToken.expireTimeMills > new Date().getMilliseconds()) {
           console.log('token 有效');
