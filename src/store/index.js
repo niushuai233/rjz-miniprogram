@@ -106,14 +106,14 @@ export default new Vuex.Store({
                 
             })
         },
-        getCategoryList({commit, state}, recordType){
+        getCategoryList({commit, state}, recordType, userId){
             return new Promise((resolve, reject)=> {
-                getCategoryList({recordType}).then(res => {
+                getCategoryList({"recordType": recordType, "userId": wx.getStorageSync("user_info").user.id}).then(res => {
                     
                     if (recordType == 0) {
-                        commit('GET_PAYLIST', res.data.categoryList)
+                        commit('GET_PAYLIST', res.categoryList)
                     } else if (recordType == 1) {
-                        commit('GET_INCOMELIST', res.data.categoryList)
+                        commit('GET_INCOMELIST', res.categoryList)
                     }
                     resolve(res)
                 }).catch(err => {

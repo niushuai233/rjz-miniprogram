@@ -56,6 +56,7 @@ export default {
         return 
       }
       let params = {
+        userId: wx.getStorageSync("user_info").user.id,
         recordType: this.recordType,
         categoryName: this.categoryName,
         iconClassName: this.currentIconClassName

@@ -11,14 +11,12 @@
       @change="swiperChange"
       :current="recordType"
     >
-      <swiper-item 
-      class="swiper-item swiper-item-1" 
-      :catchtouchmove="stopSwiper? 'stopTouchMove': ''" 
-      :class="isIphoneX? 'isIphoneX':''"
-      
+      <swiper-item
+        class="swiper-item swiper-item-1"
+        :catchtouchmove="stopSwiper? 'stopTouchMove': ''"
+        :class="isIphoneX? 'isIphoneX':''"
       >
-
-        <movable-sort :recordType='0' :isUpdate.sync="isPayListUpdated"></movable-sort>
+        <movable-sort :recordType="0" :isUpdate.sync="isPayListUpdated"></movable-sort>
         <!-- <movable-area :style ="'display: '+ movableViewInfo.showClass + '; height: 100vh'" class="movable-area">
           <movable-view 
             :y="movableViewInfo.y" 
@@ -36,7 +34,7 @@
               <i class="iconfont icon-yidongheng" style="line-height: 60rpx; text-align: center"></i>
             </div>
           </movable-view>
-        </movable-area> -->
+        </movable-area>-->
 
         <!-- <scroll-view class="scroll-view" :scroll-y='pageInfo.scrollY' style="height: 100%" @scroll="bindScroll">
           <div style="height: 120rpx"></div>
@@ -63,19 +61,18 @@
             </li>
             
           </ul>
-        </scroll-view> -->
-        
-       
+        </scroll-view>-->
       </swiper-item>
       <swiper-item class="swiper-item swiper-item-2" :class="isIphoneX? 'isIphoneX':''">
-        <movable-sort :recordType='1' :isUpdate.sync="isIncomeListUpdated"></movable-sort>
+        <movable-sort :recordType="1" :isUpdate.sync="isIncomeListUpdated"></movable-sort>
       </swiper-item>
-      
-      
     </swiper>
 
-    <div class="addBtn" :class="isIphoneX? 'isIphoneX':''" @click="goToAddCategory">新增{{recordType == 0? '支出': '收入'}}分类</div>
-
+    <div
+      class="addBtn"
+      :class="isIphoneX? 'isIphoneX':''"
+      @click="goToAddCategory"
+    >新增{{recordType == 0? '支出': '收入'}}分类</div>
   </div>
 </template>
 
@@ -155,21 +152,21 @@ export default {
   },
   methods: {
     async goUpdateCategoryList(){
-      let params = {}
-      if (this.recordType == 0) {
-        params.list = this.pList
-        params.recordType = 0
-      } else if (this.recordType == 1) {
-        params.list = this.iList
-        params.recordType = 1
-      }
+      // let params = {}
+      // if (this.recordType == 0) {
+      //   params.list = this.pList
+      //   params.recordType = 0
+      // } else if (this.recordType == 1) {
+      //   params.list = this.iList
+      //   params.recordType = 1
+      // }
       console.log('更新分类', params)
-      try {
-        let res = await updateCategoryList(params)
-        console.log(res)
-      } catch (error) {
-        console.log(error)
-      }
+      // try {
+      //   let res = await updateCategoryList(params)
+      //   console.log(res)
+      // } catch (error) {
+      //   console.log(error)
+      // }
     },
     swiperChange(e){
       console.log('isPayListUpdated',this.isPayListUpdated)
@@ -198,10 +195,10 @@ export default {
   },
   mounted(){
     
-     this.recordType = this.$mp.query.type || 0
-     console.log(this.recordType)
-    this.$store.dispatch('getCategoryList',0)
-    this.$store.dispatch('getCategoryList',1)
+    this.recordType = this.$mp.query.type || 0
+    console.log(this.recordType)
+    this.$store.dispatch('getCategoryList', 0)
+    this.$store.dispatch('getCategoryList', 1)
   },
   computed: {
       isIphoneX(){
@@ -221,8 +218,8 @@ export default {
   onShow(){
     console.log(this.$store.state.cateListNeedRefresh)
     if (this.$store.state.cateListNeedRefresh) {
-      this.$store.dispatch('getCategoryList',0)
-      this.$store.dispatch('getCategoryList',1)
+      this.$store.dispatch('getCategoryList', 0)
+      this.$store.dispatch('getCategoryList', 1)
       this.$store.commit('CATELIST_REFRESH_DONE')
     }
     
@@ -245,107 +242,145 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-inputLineHeight = 110px   
-  page {
-    background #f5f5f5
+inputLineHeight = 110px;
+
+page {
+  background: #f5f5f5;
+}
+
+.swiper {
+  height: 100vh;
+
+  .swiper-item {
+    box-sizing: border-box;
+    padding-bottom: 100px;
+
+    &.isIphoneX {
+      padding-bottom: 100px + isPhoneXBottom;
+    }
+
+    // .scroll-view
+    .list-wrap {
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      flex-direction: column;
+
+      .list-item {
+        box-sizing: border-box;
+        padding-left: 80px;
+        height: 100px;
+        width: 100%;
+        padding: 0 100px;
+        line-height: 100px;
+        font-size: 30px;
+        border-bottom: 1px solid #ededed;
+        position: relative;
+        transition: all 0.2s;
+
+        .icon {
+          position: absolute;
+          width: 60px;
+          height: 60px;
+
+          background gory {
+            .iconfont {
+              height: 60px;
+              line-height: 60px;
+              text-align: center;
+            }
+          }
+
+          &.left-icon {
+            left: 30px;
+            top: 50%;
+            margin-top: -30px;
+          }
+
+          &.right-icon {
+            right: 30px;
+            top: 50%;
+            margin-top: -30px;
+          }
+        }
+
+        &.last-child {
+          border-bottom: none;
+        }
+
+        &.selected {
+          background: #f5f5f5;
+          color: #f5f5f5;
+        }
+      }
+    }
+
+    &.swiper-item-1, &.swiper-item-2 {
+      background: #f5f5f5;
+    }
   }
-  
-  .swiper
-    height 100vh
-    .swiper-item
-        box-sizing border-box
-        padding-bottom 100px
-        &.isIphoneX
-          padding-bottom 100px + isPhoneXBottom
-        // .scroll-view
-          
-        .list-wrap 
-            background #fff
-            display flex
-            justify-content center
-            align-items center
-            width 100%
-            flex-direction column
-            .list-item
-              box-sizing border-box
-              padding-left 80px
-              height 100px
-              width 100%
-              padding 0 100px
-              line-height 100px
-              font-size 30px
-              border-bottom 1px solid #ededed
-              position relative
-              transition all 0.2s
-              .icon
-                position absolute
-                width 60px
-                height 60px
-                background gory
-                  .iconfont
-                    height 60px
-                    line-height 60px
-                    text-align center
-                &.left-icon
-                  left 30px
-                  top 50%
-                  margin-top -30px
-                &.right-icon
-                  right 30px
-                  top 50%
-                  margin-top -30px
-              &.last-child
-                border-bottom none
-              &.selected
-                background #f5f5f5
-                color #f5f5f5
-        &.swiper-item-1 
-        &.swiper-item-2
-          background #f5f5f5
+}
 
-.movable-area
-  position:absolute;
-  top:0;
-  left:0;
-  z-index:10;
-  width:100%;
-  .moveable-view
-    box-sizing border-box
-    padding 0 100px
-    height 100px
-    width 100%
-    background #fff
-    line-height 100px
-    font-size 30px
-    box-shadow 0px 0px 10px #bfbfbf
-    .icon
-      position absolute
-      width 60px
-      height 60px
-      background gory
-        .iconfont
-          height 60px
-          line-height 60px
-          text-align center
-      &.left-icon
-        left 30px
-        top 50%
-        margin-top -30px
-      &.right-icon
-        right 30px
-        top 50%
-        margin-top -30px
+.movable-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100%;
 
-.addBtn 
-  height 100px
-  width 100%
-  position fixed
-  bottom 0
-  left 0
-  background #fff
-  font-size 30px
-  text-align center
-  line-height 100px
-  &.isIphoneX
-    padding-bottom isPhoneXBottom
+  .moveable-view {
+    box-sizing: border-box;
+    padding: 0 100px;
+    height: 100px;
+    width: 100%;
+    background: #fff;
+    line-height: 100px;
+    font-size: 30px;
+    box-shadow: 0px 0px 10px #bfbfbf;
+
+    .icon {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+
+      background gory {
+        .iconfont {
+          height: 60px;
+          line-height: 60px;
+          text-align: center;
+        }
+      }
+
+      &.left-icon {
+        left: 30px;
+        top: 50%;
+        margin-top: -30px;
+      }
+
+      &.right-icon {
+        right: 30px;
+        top: 50%;
+        margin-top: -30px;
+      }
+    }
+  }
+}
+
+.addBtn {
+  height: 100px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background: #fff;
+  font-size: 30px;
+  text-align: center;
+  line-height: 100px;
+
+  &.isIphoneX {
+    padding-bottom: isPhoneXBottom;
+  }
+}
 </style>
