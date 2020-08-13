@@ -29,7 +29,7 @@
         >
             <!-- <i></i> -->
             {{item.categoryName}}
-            <div @click="deleteCategory(item._id)" class="left-icon icon" :style="{display: pageInfo.readyPlaceIndex == index? 'none':'block'}">
+            <div @click="deleteCategory(item.id)" class="left-icon icon" :style="{display: pageInfo.readyPlaceIndex == index? 'none':'block'}">
             <i class="iconfont icon-quchujinzhi-copy" style="color: #ea4f3d; font-size: 50rpx;  line-height: 60rpx; text-align: center"></i>
             </div>
             <div class="right-icon icon"
@@ -160,6 +160,7 @@ export default {
           if (res.confirm) {
             deleteCategory({
               id,
+              userId: wx.getStorageSync("user_info").user.id,
               recordType: that.recordType
             }).then(res => {
               if (res.code == 1) {
