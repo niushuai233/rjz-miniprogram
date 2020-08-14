@@ -79,7 +79,7 @@
               </div>
               <span style="font-size: 12px;">{{cItem.createTime}}</span>
             </div>
-            <div class="delete" @click="delAccounting(cItem._id)">删除</div>
+            <div class="delete" @click="delAccounting(cItem.id)">删除</div>
           </div>
         </div>
       </div>
@@ -169,7 +169,13 @@ export default {
         billYear: parseInt(this.sYear),
         billMonth: parseInt(this.sMonth)
       }).then(res => {
-        console.log(res);
+        console.log('getBookingList', res);
+        if (res && res.code === 1503) {
+          console.log('token失效, 清楚缓存内容, 并重新登陆');
+          wx.setStorageSync("user_info", '');
+          this.init();
+          return;
+        }
         if (res) {
           this.billNoteList = res.data.billNoteList;
           this.totalPayAmount = res.totalPayAmount;
