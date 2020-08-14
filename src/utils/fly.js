@@ -31,6 +31,7 @@ fly.interceptors.request.use((request)=>{
 			return login().then(res => {
 				store.commit('AUTH_SUCCESS', res.data.Token)
 				request.headers["Authorization"]=`Bearer ${res.data.Token}`
+				request.headers["token"] = wx.getStorageSync("user_info").user.userToken.token;
 				return request
 			}).finally(() => fly.unlock())
 			.catch(err => {
@@ -38,7 +39,8 @@ fly.interceptors.request.use((request)=>{
 			})
 		} else {
 			//给所有请求添加自定义header
-			request.headers["Authorization"]=`Bearer ${token}`
+			request.headers["Authorization"]=`Bearer ${token}`;
+			request.headers["token"] = wx.getStorageSync("user_info").user.userToken.token;
 			return request;
 		}
     

@@ -33,8 +33,8 @@
             </div>
             <div class="bottom">
               <div class="acount">
-                -
-                <span v-if="totalPayAmount > 0" style="color: red">￥{{totalPayAmount}}</span>
+                <span v-if="totalPayAmount > 0">-</span>
+                <span style="color: red">￥{{totalPayAmount}}</span>
               </div>
             </div>
           </div>
@@ -43,14 +43,14 @@
     </div>
 
     <scroll-view :scroll-y="listTouchInfo.scrollY" class="scroll-view">
-      <div v-if="isListEmpty" class="isListEmpty">
+      <div v-if="!!(this.billNoteList && this.billNoteList.length > 0)" class="isListEmpty">
         <img mode="aspect-fill" src="/static/images/empty_list.png" alt />
         <p>空空如也</p>
       </div>
       <div class="bookingList-wrap" :class="isIphoneX? 'isIphoneX':''">
-        <div class="item-block" v-for="(item, index) in accList" :key="item._id">
+        <div class="item-block" v-for="(item, index) in billNoteList" :key="item.id">
           <div class="item-head">
-            <div class="item-date">{{sYear+ '-' + sMonth +'-'+ item._id}}</div>
+            <div class="item-date">{{item.time}}</div>
             <div class="item-info">{{ '收入 ￥'+ item.incomeAmount + ' | 支出 ￥'+ item.payAmount}}</div>
           </div>
           <div
@@ -58,9 +58,8 @@
             @touchstart="listTouchStart"
             @touchmove="listTouchMove"
             @touchend="listTouchEnd"
-            :style="{transform: listTouchInfo.currentIndex == index+'-'+cIndex? 'translate('+ listTouchInfo.finalX  +'px,0)' : ''}"
-            v-for="(cItem, cIndex) in item.content"
-            :key="cItem._id"
+            v-for="(cItem, cIndex) in item.subBillNoteList"
+            :key="cItem.id"
             :data-index="index+'-'+cIndex"
           >
             <div class="detail-info">
@@ -71,12 +70,12 @@
                   style="line-height: 80rpx; text-align: center; font-size: 50rpx"
                 ></i>
               </div>
-              <div class="detail-title">{{cItem.title}}|{{cItem.payIncomeNote}}</div>
+              <div class="detail-title">{{cItem.categoryName}}|{{cItem.payIncomeNote}}</div>
             </div>
             <div class="detail-price">
               <div style="text-align: right">
-                <span v-if="cItem.recordType == 0" style="color: red;">-￥{{cItem.price}}</span>
-                <span v-if="cItem.recordType == 1" style="color: green;">￥{{cItem.price}}</span>
+                <span v-if="cItem.billType == 0" style="color: red;">-￥{{cItem.price}}</span>
+                <span v-if="cItem.billType == 1" style="color: green;">￥{{cItem.price}}</span>
               </div>
               <span style="font-size: 12px;">{{cItem.createTime}}</span>
             </div>
@@ -95,7 +94,7 @@ import utils from '@/utils'
 import timePicker from '@/components/timePicker'
 import tabBar from '@/components/tabBar'
 
-import { getAccountingList, getAmount, deleteAccounting} from '@/utils/api'
+import { getAccountingList, deleteAccounting} from '@/utils/api'
  
 export default {
   data () {
@@ -111,10 +110,9 @@ export default {
         lastX: 0,
         finalX: 0,
         moveBoundray: 0,
-        currentIndex: null,
-        
-        
+        currentIndex: null,       
       },
+      billNoteList: [],
       categoryList: [],
       requestMode: 1, // 1-请求月份，2-请求年份
       sYear: utils.getTodayDate().year,
@@ -130,12 +128,14 @@ export default {
   },
 
   methods: {
+    getJson(item) {
+      console.log('getJson', item);
+    },
     updateDate(v){
       console.log(v)
       this.sYear = utils.getTodayDate(v).year
       this.sMonth = utils.getTodayDate(v).month
       this.getBookingList()
-      this.getAllAmount()
     },
     delAccounting(id){
       let that = this
@@ -152,7 +152,6 @@ export default {
                     duration: 2000
                 })
                 that.getBookingList()
-                that.getAllAmount()
               }
             }).catch(err => {
               console.log(err)
@@ -163,29 +162,23 @@ export default {
           }
         }
       })
-      
     },
     getBookingList(){
-      return this.$store.dispatch('getAccountingList',{
-        recordYear: parseInt(this.sYear),
-        recordMonth: parseInt(this.sMonth)
-      })
-    },
-    getAllAmount(){
-      return getAmount({
-        recordYear: parseInt(this.sYear),
-        recordMonth: parseInt(this.sMonth)
+      return getAccountingList({
+        userId: wx.getStorageSync("user_info").user.id,
+        billYear: parseInt(this.sYear),
+        billMonth: parseInt(this.sMonth)
       }).then(res => {
-        console.log(res)
-        if (res.data) {
-          this.totalPayAmount = res.data.payAmount
-          this.totalIncomeAmount = res.data.incomeAmount
-          // this.$store.commit("ACCLIST_REFRESH_DONE")
+        console.log(res);
+        if (res) {
+          this.billNoteList = res.data.billNoteList;
+          this.totalPayAmount = res.totalPayAmount;
+          this.totalIncomeAmount = res.totalIncomeAmount;
         } else {
-          this.totalPayAmount = 0
-          this.totalIncomeAmount = 0
+          this.billNoteList = [];
+          this.totalPayAmount = 0;
+          this.totalIncomeAmount = 0;
         }
-        
       })
     },
     listTouchStart(e){
@@ -236,7 +229,6 @@ export default {
         if (userInfo.user.userToken.expireTimeMills > new Date().getMilliseconds()) {
           console.log('token 有效');
           this.getBookingList()
-          this.getAllAmount()
           return;
         }
       }
@@ -257,7 +249,6 @@ export default {
                 console.log('请求后台成功! ', res);
                 wx.setStorageSync("user_info", res.data);
                 thi.getBookingList()
-                thi.getAllAmount()
               }
             })
           } else {
@@ -279,13 +270,8 @@ export default {
         return this.$store.getters.isIphoneX
     },
     isListEmpty(){
-      return (this.accList && this.accList.length > 0) ? false : true
+      return (this.billNoteList && this.billNoteList.length > 0) ? false : true
     },
-    accList(){
-      return this.$store.getters.accList
-    },
-    
-
   },
   onShow () {
     this.init();
@@ -297,12 +283,9 @@ export default {
     // })
   },
   onPullDownRefresh() {
-    
     this.getBookingList()
-    this.getAllAmount()
     wx.stopPullDownRefresh();
   }
-
 }
 </script>
 

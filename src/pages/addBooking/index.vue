@@ -20,7 +20,7 @@
             <li
               class="list-item icon-item with-title"
               v-for="(item, index) in pList"
-              :key="item._id"
+              :key="item.id"
               :class="{active:paySelectedIndex == index}"
             >
               <div class="circle" :data-index="index" @click="showKeyboard(item, index)">
@@ -54,7 +54,7 @@
             <li
               class="list-item icon-item with-title"
               v-for="(item, index) in iList"
-              :key="item._id"
+              :key="item.id"
               :class="{active:incomeSelectedIndex == index}"
             >
               <div class="circle" :data-index="index" @click="showKeyboard(item, index)">
@@ -106,6 +106,7 @@ export default {
       payCategoryList: [],
       incomeCategoryList: [],
       currentIconClassName: '',
+      categoryId: '',
       categoryName: '',
       chooseCalendar: false,
 
@@ -145,20 +146,19 @@ export default {
         })
         return
       }
-      // console.log(this.recordDay)
       let params = {
-        recordYear: this.recordYear,
-        recordMonth: parseInt(this.recordMonth),
-        recordDay: parseInt(this.recordDay),
+        userId: wx.getStorageSync("user_info").user.id,
+        categoryId: this.categoryId,
+        billYear: this.recordYear,
+        billMonth: parseInt(this.recordMonth),
+        billDay: parseInt(this.recordDay),
+        billType: this.recordType,
         price: val.price,
-        recordType: this.recordType,
-        title: this.categoryName,
+        categoryName: this.categoryName,
         icon: this.currentIconClassName,
         payIncomeNote: this.payIncomeNote,
-        // category: 0
       }
-      // console.log(params)
-      addRecord(params).then(res=> {
+      addRecord(params).then(res => {
         if (res.code == 1) {
           this.resetBooking()
           
@@ -175,6 +175,7 @@ export default {
     },
     resetBooking(){
       this.currentIconClassName = ''
+      this.categoryId = '';
       this.categoryName = ''
       this.paySelectedIndex = null;
       this.incomeSelectedIndex = null;
@@ -184,8 +185,9 @@ export default {
       this.payIncomeNote = '';
     },
     showKeyboard(item,index){
-      this.currentIconClassName = item.iconClassName
-      this.categoryName = item.categoryName
+      this.currentIconClassName = item.iconClassName;
+      this.categoryId = item.id;
+      this.categoryName = item.categoryName;
 
       if (this.recordType == 0) {
         this.paySelectedIndex = index

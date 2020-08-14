@@ -126,7 +126,7 @@ export default new Vuex.Store({
             new Promise ((resolve, reject)=> {
                 getAccountingList(params).then(res => {
                     console.log(res)
-                    commit('GET_ACCLIST', res.data.categoryList)//
+                    commit('GET_ACCLIST', res.data.billNoteList)//
 					commit('INDEX_LIST_COUNT', res.data.count)//INDEX_LIST_COUNT
                     commit("ACCLIST_REFRESH_DONE")
 
@@ -149,7 +149,5 @@ export default new Vuex.Store({
         pList: state=> state.pList,
         iList: state=> state.iList,
         accList: state => state.accList,
-		
-        
     }
 })
