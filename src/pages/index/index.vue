@@ -58,6 +58,7 @@
             @touchstart="listTouchStart"
             @touchmove="listTouchMove"
             @touchend="listTouchEnd"
+            :style="{transform: listTouchInfo.currentIndex == index+'-'+cIndex? 'translate('+ listTouchInfo.finalX  +'px,0)' : ''}"
             v-for="(cItem, cIndex) in item.subBillNoteList"
             :key="cItem.id"
             :data-index="index+'-'+cIndex"
@@ -128,9 +129,6 @@ export default {
   },
 
   methods: {
-    getJson(item) {
-      console.log('getJson', item);
-    },
     updateDate(v){
       console.log(v)
       this.sYear = utils.getTodayDate(v).year
@@ -145,6 +143,12 @@ export default {
         success(res) {
           if (res.confirm) {
             deleteAccounting({id}).then((res) => {
+              if (res.code === 1503) {
+                console.log('token失效');
+                wx.setStorageSync('user_info', '');
+                that.init();
+                return;
+              }
               if(res.code == 1){
                 wx.showToast({
                     title: '删除成功',
@@ -193,7 +197,7 @@ export default {
       this.listTouchInfo.startX = e.touches[0].clientX
       this.listTouchInfo.startY = e.touches[0].clientY
       
-      // console.log(e.mp.currentTarget.dataset.index)
+      console.log(e.mp.currentTarget.dataset.index)
       this.listTouchInfo.currentIndex = e.mp.currentTarget.dataset.index
       this.xCanMove = true   // 默认允许左滑
 
@@ -283,10 +287,6 @@ export default {
     this.init();
   },
   mounted(){
-    // this.getBookingList({
-    //   recordYear: parseInt(utils.getTodayDate().year),
-    //   recordMonth: parseInt(utils.getTodayDate().month)
-    // })
   },
   onPullDownRefresh() {
     this.getBookingList()

@@ -22,7 +22,7 @@ fly.interceptors.request.use((request)=>{
 			title: '加载中...',
 			mask: true,
 		})
-		let token = store.state.token
+		let token = wx.getStorageSync("user_info").user.userToken.token
 		if (!token  || store.state.status == 'error') {
 			console.log('走这')
 			fly.lock();

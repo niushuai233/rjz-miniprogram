@@ -47,5 +47,5 @@ export const addRecord = params => {
 
 // deleteAccounting
 export const deleteAccounting = params => {
-  return http.post('/accounting/deleteAccounting', params)
+  return http.post('/bill/note/deleteBillNote', params)
 };
