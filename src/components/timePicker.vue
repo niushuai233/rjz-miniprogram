@@ -2,7 +2,6 @@
   <div>
     <picker
         mode="date"
-        :value="date"
         :fields="fields"
         @change="bindDateChange"
         @cancel="bindCancel"
