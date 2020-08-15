@@ -168,6 +168,9 @@ export default {
       })
     },
     getBookingList(){
+      this.billNoteList = [];
+      this.totalPayAmount = 0;
+      this.totalIncomeAmount = 0;
       return getAccountingList({
         userId: wx.getStorageSync("user_info").user.id,
         billYear: parseInt(this.sYear),
