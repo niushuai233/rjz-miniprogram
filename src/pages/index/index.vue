@@ -1,6 +1,9 @@
 <template>
   <div @touchstart="fatherClick">
     <div class="header">
+      <div style="display: none;">
+        <button ref="getUserInfoButton" open-type="getUserInfo">用户信息</button>
+      </div>
       <div class="header-bar">
         <div class="bar-item bar-item-1">
           <div class="top">{{sYear}}年</div>
@@ -250,20 +253,52 @@ export default {
       wx.login({
         success (res) {
           if (res.code) {
+            var wxcode = res.code;
             console.log('wx登陆成功!');
-            //发起网络请求
-            wx.request({
-              url: `${process.env.API_ROOT}/sys/user/login`,
-              method: "POST",
-              data: {
-                code: res.code
-              },
-              success: res => {
-                console.log('请求后台成功! ', res);
-                wx.setStorageSync("user_info", res.data);
-                thi.getBookingList()
+            wx.getSetting({
+              success (res) {
+                console.log('wx getSetting success!', res);
+                if (res.authSetting['scope.userInfo']) {
+                  wx.getUserInfo({
+                    success (res) {
+                      console.log('wx getUserInfo success!', res);
+                      //发起网络请求
+                      wx.request({
+                        url: `${process.env.API_ROOT}/sys/user/login`,
+                        method: "POST",
+                        data: {
+                          code: wxcode,
+                          nickName: res.userInfo.nickName,
+                          avatarUrl: res.userInfo.avatarUrl,
+                          gender: res.userInfo.gender,
+                          country: res.userInfo.country,
+                          province: res.userInfo.province,
+                          city: res.userInfo.city
+                        },
+                        success: res => {
+                          console.log('请求后台成功! ', res);
+                          if (res.data && res.data.code === 0) {
+                            wx.showToast({
+                              title: '登陆成功',
+                              icon: 'success',
+                              duration: 1000
+                            })
+                            wx.setStorageSync("user_info", res.data);
+                            thi.getBookingList()
+                          } else {
+                            wx.showToast({
+                              title: res.data.msg + ' 请重新进入小程序',
+                              icon: 'none',
+                              duration: 2000
+                            })
+                          }
+                        }
+                      })
+                    }
+                  });
+                }
               }
-            })
+            });
           } else {
             console.log('登录失败! ' + res.errMsg)
           }
@@ -271,7 +306,6 @@ export default {
       })
     }
   },
-
   created () {
     // let app = getApp()
     this.systemInfo = wx.getSystemInfoSync();
