@@ -4,7 +4,8 @@
     "pages/addBooking/main",
     "pages/categoryList/main",
     "pages/addCategory/main",
-    "pages/my/main"
+    "pages/my/main",
+    "pages/addEmailConfig/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

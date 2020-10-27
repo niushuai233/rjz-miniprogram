@@ -49,3 +49,8 @@ export const addRecord = params => {
 export const deleteAccounting = params => {
   return http.post('/bill/note/deleteBillNote', params)
 };
+
+
+export const updateUserEmail = params => {
+  return http.post('/sys/user/updateUserEmail', params)
+};

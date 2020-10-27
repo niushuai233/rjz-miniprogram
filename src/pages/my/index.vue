@@ -18,7 +18,11 @@
       
       <div class="my-list">
         <div class="list-item" @click="navigateTo('/pages/categoryList/main')">
-          <p class="list-item-left"><i class="iconfont icon--biaodanfenlei"></i>分类设置</p>
+          <p class="list-item-left"><i class="iconfont icon--biaodanfenlei"></i>账单分类设置</p>
+          <p class="list-item-right"><i class="iconfont icon-Icons_ToolBar_ArrowRight"></i></p>
+        </div>
+        <div class="list-item" @click="navigateTo('/pages/addEmailConfig/main')">
+          <p class="list-item-left"><i class="iconfont icon--biaodanfenlei"></i>月账单推送</p>
           <p class="list-item-right"><i class="iconfont icon-Icons_ToolBar_ArrowRight"></i></p>
         </div>
         <!-- <div class="list-item" @click="navigateTo('')">
