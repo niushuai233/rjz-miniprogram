@@ -296,12 +296,28 @@ export default {
                       })
                     }
                   });
+                } else {
+                  wx.showToast({
+                    title: '请授权获取用户信息',
+                    icon: 'none',
+                    duration: 2000
+                  })
+                  wx.switchTab({
+                    url: '/page/userAuth/main'
+                  });
                 }
-              }
+              },
             });
           } else {
             console.log('登录失败! ' + res.errMsg)
           }
+        },
+        fail (res) {
+          wx.showToast({
+            title: '获取信息失败, ' + res,
+            icon: 'none',
+            duration: 3000
+          })
         }
       })
     }

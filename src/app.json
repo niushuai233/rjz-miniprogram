@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/userAuth/main",
     "pages/index/main",
     "pages/addBooking/main",
     "pages/categoryList/main",
