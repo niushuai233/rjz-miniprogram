@@ -1,4 +1,4 @@
 module.exports = {
   NODE_ENV: '"production"',
-  API_ROOT: '"https://niushuai.huihuistudy.top/api/"'
+  API_ROOT: '"https://shuai-rjz.ddnsto.com/api/"'
 }
